@@ -107,9 +107,9 @@ class BinaryTree<T>(var value: T) {
         @JvmStatic
         fun randomIntegerTree(random: Random, size: Int, maxInteger: Int): BinaryTree<Int> {
             require(size > 0) { "size must be positive: $size" }
-            return BinaryTree(random.nextInt(maxInteger / 2) - maxInteger).also { tree ->
+            return BinaryTree(random.nextInt(maxInteger) - (maxInteger / 2)).also { tree ->
                 repeat(size - 1) {
-                    add(tree, random.nextInt(maxInteger / 2) - maxInteger, random)
+                    add(tree, random.nextInt(maxInteger) - (maxInteger / 2), random)
                 }
                 check(tree.size == size)
             }
@@ -117,12 +117,12 @@ class BinaryTree<T>(var value: T) {
 
         @JvmStatic
         fun randomIntegerTree(size: Int, maxInteger: Int): BinaryTree<Int> {
-            return randomIntegerTree(Random().apply { setSeed(124) }, size, maxInteger)
+            return randomIntegerTree(Random(), size, maxInteger)
         }
 
         @JvmStatic
         fun randomIntegerTree(size: Int): BinaryTree<Int> {
-            return randomIntegerTree(Random().apply { setSeed(124) }, size, 128)
+            return randomIntegerTree(Random(), size, 128)
         }
 
         @JvmStatic
