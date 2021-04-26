@@ -1,26 +1,32 @@
 @file:Suppress("unused")
-@file:JvmName("Partitioner")
 
 package cs125.sorting.quicksort
 
-fun <T : Comparable<T>?> partition(values: Array<T>?, start: Int, end: Int): Int {
-    require(values != null && values.isNotEmpty())
-    var tmp: T
-    var pivotPosition = start
-    for (i in start + 1 until end) {
-        if (values[i]!! < values[start]) {
-            pivotPosition++
+@Suppress("MemberVisibilityCanBePrivate")
+class Partitioner {
+    companion object {
+        @JvmStatic
+        fun <T : Comparable<T>?> partition(values: Array<T>?, start: Int, end: Int): Int {
+            require(values != null && values.isNotEmpty())
+            var tmp: T
+            var pivotPosition = start
+            for (i in start + 1 until end) {
+                if (values[i]!! < values[start]) {
+                    pivotPosition++
+                    tmp = values[pivotPosition]
+                    values[pivotPosition] = values[i]
+                    values[i] = tmp
+                }
+            }
             tmp = values[pivotPosition]
-            values[pivotPosition] = values[i]
-            values[i] = tmp
+            values[pivotPosition] = values[start]
+            values[start] = tmp
+            return pivotPosition
+        }
+
+        @JvmStatic
+        fun <T : Comparable<T>?> partition(values: Array<T>): Int {
+            return partition(values, 0, values.size)
         }
     }
-    tmp = values[pivotPosition]
-    values[pivotPosition] = values[start]
-    values[start] = tmp
-    return pivotPosition
-}
-
-fun <T : Comparable<T>?> partition(values: Array<T>): Int {
-    return partition(values, 0, values.size)
 }
