@@ -1,5 +1,5 @@
 group = "com.github.cs125-illinois"
-version = "2021.5.3"
+version = "2021.5.4"
 
 plugins {
     kotlin("jvm") version "1.5.0"
