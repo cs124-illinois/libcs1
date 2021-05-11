@@ -1,7 +1,5 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
-group = "com.github.cs125-illinois.libcs1"
-version = "2021.5.0"
+group = "com.github.cs125-illinois"
+version = "2021.5.1"
 
 plugins {
     kotlin("jvm") version "1.5.0"
@@ -12,36 +10,22 @@ plugins {
 }
 repositories {
     mavenCentral()
-    jcenter()
+    maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
 }
 dependencies {
     implementation(kotlin("stdlib"))
 }
-tasks.withType<KotlinCompile> {
-    val javaVersion = JavaVersion.VERSION_1_8.toString()
-    sourceCompatibility = javaVersion
-    targetCompatibility = javaVersion
-    kotlinOptions {
-        jvmTarget = javaVersion
-    }
-}
 tasks.dependencyUpdates {
-    resolutionStrategy {
-        componentSelection {
-            all {
-                if (listOf("alpha", "beta", "rc", "cr", "m", "preview", "b", "ea", "eap", "pr").any { qualifier ->
-                        candidate.version.matches(Regex("(?i).*[.-]$qualifier[.\\d-+]*"))
-                    }) {
-                    reject("Release candidate")
-                }
-            }
-        }
-    }
+    fun String.isNonStable() = !(
+        listOf("RELEASE", "FINAL", "GA").any { toUpperCase().contains(it) }
+            || "^[0-9,.v-]+(-r)?$".toRegex().matches(this)
+        )
+    rejectVersionIf { candidate.version.isNonStable() }
     gradleReleaseChannel = "current"
 }
 publishing {
     publications {
-        create<MavenPublication>("lib") {
+        create<MavenPublication>("libcs1") {
             from(components["java"])
         }
     }

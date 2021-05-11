@@ -2,7 +2,7 @@
 
 package cs125.sorting.quicksort
 
-@Suppress("MemberVisibilityCanBePrivate")
+@Suppress("MemberVisibilityCanBePrivate", "UtilityClassWithPublicConstructor")
 class Partitioner {
     companion object {
         @JvmStatic
