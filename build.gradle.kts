@@ -1,11 +1,11 @@
 group = "com.github.cs125-illinois"
-version = "2021.5.7"
+version = "2021.7.0"
 
 plugins {
-    kotlin("jvm") version "1.5.10"
+    kotlin("jvm") version "1.5.21"
     `maven-publish`
-    id("org.jmailen.kotlinter") version "3.4.4"
-    id("com.github.ben-manes.versions") version "0.38.0"
+    id("org.jmailen.kotlinter") version "3.4.5"
+    id("com.github.ben-manes.versions") version "0.39.0"
     id("io.gitlab.arturbosch.detekt") version "1.17.1"
 }
 repositories {
