@@ -1,12 +1,12 @@
 group = "com.github.cs125-illinois"
-version = "2021.7.0"
+version = "2021.8.0"
 
 plugins {
     kotlin("jvm") version "1.5.21"
     `maven-publish`
-    id("org.jmailen.kotlinter") version "3.4.5"
+    id("org.jmailen.kotlinter") version "3.5.0"
     id("com.github.ben-manes.versions") version "0.39.0"
-    id("io.gitlab.arturbosch.detekt") version "1.17.1"
+    id("io.gitlab.arturbosch.detekt") version "1.18.0"
 }
 repositories {
     mavenCentral()
