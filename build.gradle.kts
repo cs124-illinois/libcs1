@@ -1,16 +1,22 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 group = "com.github.cs125-illinois"
-version = "2021.8.1"
+version = "2021.10.0"
 
 plugins {
-    kotlin("jvm") version "1.5.30"
+    kotlin("jvm") version "1.5.31"
     `maven-publish`
-    id("org.jmailen.kotlinter") version "3.5.1"
+    id("org.jmailen.kotlinter") version "3.6.0"
     id("com.github.ben-manes.versions") version "0.39.0"
     id("io.gitlab.arturbosch.detekt") version "1.18.1"
 }
 repositories {
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
+}
+dependencies {
+    testImplementation("io.kotest:kotest-runner-junit5:4.6.3")
+    testImplementation("org.slf4j:slf4j-simple:1.7.32")
 }
 tasks.dependencyUpdates {
     fun String.isNonStable() = !(
@@ -29,4 +35,14 @@ publishing {
 }
 detekt {
     buildUponDefaultConfig = true
+}
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_16.toString()
+    }
+}
+tasks.withType<Test> {
+    useJUnitPlatform()
+    enableAssertions = true
+    jvmArgs("-ea", "-Xmx1G", "-Xss256k", "-Dfile.encoding=UTF-8")
 }
