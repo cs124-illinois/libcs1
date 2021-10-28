@@ -9,8 +9,8 @@ import io.kotest.matchers.shouldBe
 class TestUndirectedGraph : StringSpec({
     "it should create a single-node graph" {
         singleNodeGraph(8).also {
-          Example.size(it) shouldBe 1
-          Example.sum(it) shouldBe 8
+            Example.size(it) shouldBe 1
+            Example.sum(it) shouldBe 8
         }
     }
     "it should create a two-node graph" {

@@ -26,9 +26,11 @@ fun <T> Map<InputNode<T>, Set<InputNode<T>>>.toGraph(): Node<T> {
     val mapping = keys.mapIndexed { index, key -> key to Node(key.value, index) }.toMap()
     forEach { (key, values) ->
         check(mapping[key] != null) { "Missing mapping for key in graph creation" }
-        mapping[key]!!.neighbors.addAll(values.map {
-            mapping[it] ?: error("Missing mapping for value in graph creation")
-        })
+        mapping[key]!!.neighbors.addAll(
+            values.map {
+                mapping[it] ?: error("Missing mapping for value in graph creation")
+            }
+        )
     }
 
     mapping.values.forEach {
