@@ -1,6 +1,6 @@
 package com.example;
 
-import cs125.graphs.Node;
+import cs1.graphs.Node;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,24 +1,40 @@
-package cs125.graphs
+package cs1.graphs
+
+import java.util.Objects
 
 class Node<T>(val value: T, private val index: Int, val neighbors: MutableSet<Node<T>> = mutableSetOf()) {
     override fun toString() = "Node $index ($value)"
+    override fun equals(other: Any?): Boolean {
+        if (other !is Node<*>) {
+            return false
+        }
+        return value == other.value && toMap() == other.toMap()
+    }
+
+    override fun hashCode() = Objects.hash(value, toMap())
 }
 
 class InputNode<T>(var value: T)
 
-private fun <T> find(node: Node<T>, visited: MutableSet<Node<T>>) {
-    visited += node
-    for (neighbor in node.neighbors) {
+private fun <T> Node<T>.find(visited: MutableSet<Node<T>>) {
+    visited += this
+    for (neighbor in neighbors) {
         if (neighbor !in visited) {
-            find(neighbor, visited)
+            neighbor.find(visited)
         }
     }
 }
 
-private fun <T> find(node: Node<T>): Set<Node<T>> {
+private fun <T> Node<T>.find(): Set<Node<T>> {
     val nodes = mutableSetOf<Node<T>>()
-    find(node, nodes)
+    println(nodes.size)
+    find(nodes)
     return nodes
+}
+
+fun <T> Node<T>.toMap(): Map<Node<T>, Set<Node<T>>> {
+    find()
+    return mapOf<Node<T>, Set<Node<T>>>()
 }
 
 fun <T> Map<InputNode<T>, Set<InputNode<T>>>.toGraph(): Node<T> {
@@ -35,7 +51,7 @@ fun <T> Map<InputNode<T>, Set<InputNode<T>>>.toGraph(): Node<T> {
 
     mapping.values.forEach {
         check(it !in it.neighbors) { "Graph contains a self-edge" }
-        check(find(it) == mapping.values.toSet()) { "Graph is not connected" }
+        check(it.find() == mapping.values.toSet()) { "Graph is not connected" }
         for (node in it.neighbors) {
             check(it in node.neighbors) { "Graph is not undirected" }
         }
