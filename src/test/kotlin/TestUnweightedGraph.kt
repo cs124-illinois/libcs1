@@ -60,6 +60,9 @@ class TestUnweightedGraph : StringSpec({
         }
         graphs.size shouldBe 1024
     }
+    "it should create a random string graph" {
+        UnweightedGraph.randomStringGraph(1024)
+    }
     "it should create equal graphs" {
         UnweightedGraph.fullyConnectedGraph((32..63).toList()).also { graph ->
             graph shouldBe UnweightedGraph.fullyConnectedGraph((32..63).toList())

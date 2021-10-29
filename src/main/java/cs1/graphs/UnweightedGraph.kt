@@ -3,16 +3,16 @@ package cs1.graphs
 import java.util.Objects
 import java.util.Random
 
-class Node<T>(var value: T) {
+class Node<T>(var value: T, val nonce: Int) {
     override fun equals(other: Any?) = when (other) {
         !is Node<*> -> false
-        else -> value == other.value
+        else -> value == other.value && nonce == other.nonce
     }
 
-    override fun hashCode() = Objects.hash(value)
+    override fun hashCode() = Objects.hash(value, nonce)
 }
 
-class GraphNode<T>(val value: T, val nonce: Int, var neighbors: Set<GraphNode<T>> = setOf()) {
+class GraphNode<T> @JvmOverloads constructor(val value: T, val nonce: Int, var neighbors: Set<GraphNode<T>> = setOf()) {
     constructor(node: GraphNode<T>) : this(node.value, node.nonce)
 
     override fun equals(other: Any?) = when (other) {
@@ -49,9 +49,9 @@ fun <T> Map<Node<T>, Set<Node<T>>>.toGraphNodes(random: Random) =
             forEach { (node, neighbors) ->
                 node.neighbors = neighbors
             }
+            check(keys.first().find() == mapping.values.toSet()) { "Graph is not connected" }
             keys.forEach { node ->
                 check(node !in node.neighbors) { "Graph contains a self-edge" }
-                check(node.find() == mapping.values.toSet()) { "Graph is not connected" }
                 for (neighbor in node.neighbors) {
                     check(node in neighbor.neighbors) { "Graph is not undirected" }
                 }
@@ -72,7 +72,7 @@ private fun <T> Map<GraphNode<T>, Set<GraphNode<T>>>.copyGraphNodes() =
         }
     }
 
-fun Map<GraphNode<*>, Set<GraphNode<*>>>.toNodes() = keys.associateWith { Node(it.value) }.let { mapping ->
+fun Map<GraphNode<*>, Set<GraphNode<*>>>.toNodes() = keys.associateWith { Node(it.value, 0) }.let { mapping ->
     map { (key, values) ->
         check(mapping[key] != null) { "Missing mapping for node in graph creation" }
         mapping[key]!! to values.map { value ->
@@ -99,19 +99,21 @@ class UnweightedGraph<T> private constructor(
 
     override fun hashCode() = Objects.hash(edges)
 
+    val node = edges.keys.minByOrNull { it.nonce }!!
+
     @Suppress("TooManyFunctions")
     companion object {
         @JvmStatic
         fun <T> singleNodeGraph(value: T, random: Random = Random()) =
-            UnweightedGraph(mapOf(Node(value) to setOf()), random)
+            UnweightedGraph(mapOf(Node(value, 0) to setOf()), random)
 
         @JvmStatic
         fun <T> twoNodeGraph(first: T, second: T, random: Random = Random()): UnweightedGraph<T> {
-            val mapping = mapOf(first to Node(first), second to Node(second))
+            val mapping = mapOf(0 to Node(first, 0), 1 to Node(second, 1))
             return UnweightedGraph(
                 mapOf(
-                    mapping[first]!! to setOf(mapping[second]!!),
-                    mapping[second]!! to setOf(mapping[first]!!)
+                    mapping[0]!! to setOf(mapping[1]!!),
+                    mapping[1]!! to setOf(mapping[0]!!)
                 ),
                 random
             )
@@ -120,26 +122,26 @@ class UnweightedGraph<T> private constructor(
         @JvmStatic
         fun <T> circleGraph(list: List<T>, random: Random = Random()): UnweightedGraph<T> {
             require(list.size >= 2) { "List has fewer than two elements" }
-            val mapping = list.associateWith { Node(it) }
+            val mapping = list.mapIndexed { i, it -> i to Node(it, i) }.toMap()
             val edges = mapping.values.associateWith { mutableSetOf<Node<T>>() }
             for (i in 0 until (list.size - 1)) {
-                edges[mapping[list[i]]]!! += mapping[list[i + 1]]!!
-                edges[mapping[list[i + 1]]]!! += mapping[list[i]]!!
+                edges[mapping[i]]!! += mapping[i + 1]!!
+                edges[mapping[i + 1]]!! += mapping[i]!!
             }
-            edges[mapping[list[0]]]!! += mapping[list[list.size - 1]]!!
-            edges[mapping[list[list.size - 1]]]!! += mapping[list[0]]!!
+            edges[mapping[0]]!! += mapping[list.size - 1]!!
+            edges[mapping[list.size - 1]]!! += mapping[0]!!
             return UnweightedGraph(edges, random)
         }
 
         @JvmStatic
         fun <T> fullyConnectedGraph(list: List<T>, random: Random = Random()): UnweightedGraph<T> {
             require(list.size >= 2) { "List has fewer than two elements" }
-            val mapping = list.associateWith { Node(it) }
+            val mapping = list.mapIndexed { i, it -> i to Node(it, i) }.toMap()
             val edges = mapping.values.associateWith { mutableSetOf<Node<T>>() }
             for (i in list.indices) {
                 for (j in (i + 1) until list.size) {
-                    edges[mapping[list[i]]]!! += mapping[list[j]]!!
-                    edges[mapping[list[j]]]!! += mapping[list[i]]!!
+                    edges[mapping[i]]!! += mapping[j]!!
+                    edges[mapping[j]]!! += mapping[i]!!
                 }
             }
             return UnweightedGraph(edges, random)
@@ -148,7 +150,7 @@ class UnweightedGraph<T> private constructor(
         @JvmStatic
         fun <T> randomGraph(list: List<T>, random: Random = Random()): UnweightedGraph<T> {
             require(list.size >= 2) { "List has fewer than two elements" }
-            val mapping = list.associateWith { Node(it) }
+            val mapping = list.mapIndexed { i, it -> i to Node(it, i) }.toMap()
             val edges = mapping.values.associateWith { mutableSetOf<Node<T>>() }
             for (i in list.indices) {
                 val previous = ((i + 1) until list.size).toList()
@@ -156,8 +158,8 @@ class UnweightedGraph<T> private constructor(
                     continue
                 }
                 for (j in previous.shuffled(random).take(random.nextInt(previous.size) + 1)) {
-                    edges[mapping[list[i]]]!! += mapping[list[j]]!!
-                    edges[mapping[list[j]]]!! += mapping[list[i]]!!
+                    edges[mapping[i]]!! += mapping[j]!!
+                    edges[mapping[j]]!! += mapping[i]!!
                 }
             }
             return UnweightedGraph(edges, random)
