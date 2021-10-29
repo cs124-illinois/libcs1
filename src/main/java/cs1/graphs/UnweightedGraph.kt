@@ -100,6 +100,7 @@ class UnweightedGraph<T> private constructor(
     override fun hashCode() = Objects.hash(edges)
 
     val node = edges.keys.minByOrNull { it.nonce }!!
+    val nodes = edges.keys
 
     @Suppress("TooManyFunctions")
     companion object {
