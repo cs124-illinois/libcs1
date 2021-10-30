@@ -11,6 +11,10 @@ public class Example {
     return graph.getEdges().size();
   }
 
+  public static <T> int sizeWithNodes(UnweightedGraph<T> graph) {
+    return graph.getNodes().size();
+  }
+
   public static <T> int size(GraphNode<T> node) {
     Set<GraphNode<T>> nodes = new HashSet<>();
     traverse(node, nodes);
