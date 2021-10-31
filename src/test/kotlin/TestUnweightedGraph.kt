@@ -2,6 +2,7 @@ import com.example.Example
 import cs1.graphs.UnweightedGraph
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 
@@ -10,6 +11,7 @@ class TestUnweightedGraph : StringSpec({
         UnweightedGraph.singleNodeGraph(8).also { graph ->
             Example.size(graph) shouldBe 1
             Example.sum(graph) shouldBe 8
+            Example.hasCycle(graph) shouldBe false
             graph.edges.keys.forEach { node ->
                 Example.size(node) shouldBe 1
                 Example.sum(node) shouldBe 8
@@ -20,6 +22,7 @@ class TestUnweightedGraph : StringSpec({
         UnweightedGraph.twoNodeUndirectedGraph(8, 16).also { graph ->
             Example.size(graph) shouldBe 2
             Example.sum(graph) shouldBe 24
+            Example.hasCycle(graph) shouldBe false
             graph.edges.keys.forEach { node ->
                 Example.size(node) shouldBe 2
                 Example.sum(node) shouldBe 24
@@ -30,6 +33,7 @@ class TestUnweightedGraph : StringSpec({
         UnweightedGraph.twoNodeDirectedGraph(8, 16).also { graph ->
             Example.size(graph) shouldBe 2
             Example.sum(graph) shouldBe 24
+            Example.hasCycle(graph) shouldBe false
             graph.edges.keys.forEach { node ->
                 Example.size(node) shouldBe if (node.value == 8) { 2 } else { 1 }
                 Example.sum(node) shouldBe if (node.value == 8) { 24 } else { 16 }
@@ -40,21 +44,83 @@ class TestUnweightedGraph : StringSpec({
         UnweightedGraph.circleUndirectedGraph((0..31).toList()).also { graph ->
             Example.size(graph) shouldBe 32
             Example.sum(graph) shouldBe (0..31).sum()
+            Example.hasCycle(graph) shouldBe true
             graph.edges.keys.forEach { node ->
                 Example.size(node) shouldBe 32
                 Example.sum(node) shouldBe (0..31).sum()
             }
         }
     }
+    "it should create a small circular undirected graph" {
+        UnweightedGraph.circleUndirectedGraph((0..2).toList()).also { graph ->
+            Example.hasCycle(graph) shouldBe true
+        }
+    }
     "it should create a circular directed graph" {
         UnweightedGraph.circleDirectedGraph((0..31).toList()).also { graph ->
             Example.size(graph) shouldBe 32
             Example.sum(graph) shouldBe (0..31).sum()
+            Example.hasCycle(graph) shouldBe true
             graph.edges.keys.forEach { node ->
                 Example.size(node) shouldBe 32
                 Example.sum(node) shouldBe (0..31).sum()
             }
         }
+    }
+    "it should create a linear undirected graph" {
+        UnweightedGraph.linearUndirectedGraph((0..31).toList()).also { graph ->
+            Example.size(graph) shouldBe 32
+            Example.sum(graph) shouldBe (0..31).sum()
+            Example.hasCycle(graph) shouldBe false
+            graph.edges.keys.forEach { node ->
+                Example.size(node) shouldBe 32
+                Example.sum(node) shouldBe (0..31).sum()
+            }
+        }
+    }
+    "it should create a small linear undirected graph" {
+        UnweightedGraph.linearUndirectedGraph((0..2).toList()).also { graph ->
+            Example.hasCycle(graph) shouldBe false
+        }
+    }
+    "it should create a linear directed graph" {
+        UnweightedGraph.linearDirectedGraph((0..31).toList()).also { graph ->
+            Example.size(graph) shouldBe 32
+            Example.sum(graph) shouldBe (0..31).sum()
+            Example.hasCycle(graph) shouldBe false
+            graph.edges.keys.filter { node ->
+                Example.size(node) == 32 && Example.sum(node) == (0..31).sum()
+            } shouldHaveSize 1
+        }
+    }
+    "it should create a small cross undirected graph" {
+        UnweightedGraph.crossUndirectedGraph((0..2).toList(), (3..5).toList()).also { graph ->
+            Example.size(graph) shouldBe 6
+            Example.sum(graph) shouldBe (0..5).sum()
+            Example.hasCycle(graph) shouldBe false
+            graph.edges.keys.forEach { node ->
+                Example.size(node) shouldBe 6
+                Example.sum(node) shouldBe (0..5).sum()
+            }
+        }
+    }
+    "it should create a random tree undirected graph" {
+        UnweightedGraph.randomTreeUndirectedGraph((0..31).toList()).also { graph ->
+            Example.size(graph) shouldBe 32
+            Example.sum(graph) shouldBe (0..31).sum()
+            Example.hasCycle(graph) shouldBe false
+            graph.edges.keys.forEach { node ->
+                Example.size(node) shouldBe 32
+                Example.sum(node) shouldBe (0..31).sum()
+            }
+        }
+        val graphs = mutableSetOf<UnweightedGraph<*>>()
+        repeat(1024) {
+            val newGraph = UnweightedGraph.randomTreeUndirectedGraph((32..63).toList())
+            Example.hasCycle(newGraph) shouldBe false
+            graphs += newGraph
+        }
+        graphs.size shouldBe 1024
     }
     "it should create a fully-connected undirected graph" {
         UnweightedGraph.fullyConnectedGraph((32..63).toList()).also { graph ->
@@ -77,7 +143,10 @@ class TestUnweightedGraph : StringSpec({
         }
         val graphs = mutableSetOf<UnweightedGraph<*>>()
         repeat(1024) {
-            graphs += UnweightedGraph.randomUndirectedGraph((32..63).toList())
+            val newGraph = UnweightedGraph.randomUndirectedGraph((32..63).toList())
+            // Not 100%, but almost always...
+            Example.hasCycle(newGraph) shouldBe true
+            graphs += newGraph
         }
         graphs.size shouldBe 1024
     }
