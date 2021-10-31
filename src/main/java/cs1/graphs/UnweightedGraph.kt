@@ -162,6 +162,29 @@ class UnweightedGraph<T> private constructor(edges: Map<GraphNode<T>, Set<GraphN
         }
 
         @JvmStatic
+        fun <T> linearUndirectedGraph(list: List<T>, random: Random = Random()): UnweightedGraph<T> {
+            require(list.size >= 2) { "List has fewer than two elements" }
+            val mapping = list.mapIndexed { i, it -> i to Node(it, i) }.toMap()
+            val edges = mapping.values.associateWith { mutableSetOf<Node<T>>() }
+            for (i in 0 until (list.size - 1)) {
+                edges[mapping[i]]!! += mapping[i + 1]!!
+                edges[mapping[i + 1]]!! += mapping[i]!!
+            }
+            return UnweightedGraph(edges, random, true)
+        }
+
+        @JvmStatic
+        fun <T> linearDirectedGraph(list: List<T>, random: Random = Random()): UnweightedGraph<T> {
+            require(list.size >= 2) { "List has fewer than two elements" }
+            val mapping = list.mapIndexed { i, it -> i to Node(it, i) }.toMap()
+            val edges = mapping.values.associateWith { mutableSetOf<Node<T>>() }
+            for (i in 0 until (list.size - 1)) {
+                edges[mapping[i]]!! += mapping[i + 1]!!
+            }
+            return UnweightedGraph(edges, random, false)
+        }
+
+        @JvmStatic
         fun <T> circleUndirectedGraph(list: List<T>, random: Random = Random()): UnweightedGraph<T> {
             require(list.size >= 2) { "List has fewer than two elements" }
             val mapping = list.mapIndexed { i, it -> i to Node(it, i) }.toMap()
