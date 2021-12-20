@@ -1,10 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "com.github.cs125-illinois"
-version = "2021.12.0"
+version = "2021.12.1"
 
 plugins {
-    kotlin("jvm") version "1.6.0"
+    kotlin("jvm") version "1.6.10"
     `maven-publish`
     id("org.jmailen.kotlinter") version "3.7.0"
     id("com.github.ben-manes.versions") version "0.39.0"
@@ -15,7 +15,7 @@ repositories {
     maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
 }
 dependencies {
-    testImplementation("io.kotest:kotest-runner-junit5:5.0.1")
+    testImplementation("io.kotest:kotest-runner-junit5:5.0.3")
     testImplementation("org.slf4j:slf4j-simple:1.7.32")
 }
 tasks.dependencyUpdates {
