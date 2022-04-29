@@ -1,22 +1,22 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "com.github.cs125-illinois"
-version = "2022.1.0"
+version = "2022.4.0"
 
 plugins {
-    kotlin("jvm") version "1.6.10"
+    kotlin("jvm") version "1.6.21"
     `maven-publish`
-    id("org.jmailen.kotlinter") version "3.8.0"
-    id("com.github.ben-manes.versions") version "0.41.0"
-    id("io.gitlab.arturbosch.detekt") version "1.19.0"
+    id("org.jmailen.kotlinter") version "3.10.0"
+    id("com.github.ben-manes.versions") version "0.42.0"
+    id("io.gitlab.arturbosch.detekt") version "1.20.0"
 }
 repositories {
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
 }
 dependencies {
-    testImplementation("io.kotest:kotest-runner-junit5:5.0.3")
-    testImplementation("org.slf4j:slf4j-simple:1.7.32")
+    testImplementation("io.kotest:kotest-runner-junit5:5.2.3")
+    testImplementation("org.slf4j:slf4j-simple:1.7.36")
 }
 tasks.dependencyUpdates {
     fun String.isNonStable() = !(
