@@ -141,7 +141,7 @@ class BinaryTree<T>(var value: T) {
             return randomBalancedIntegerTree(Random().apply { setSeed(124) }, size, maxInteger)
         }
 
-        private fun Random.nextInt(min: Int, max: Int) = let {
+        private fun Random.nextIntRange(min: Int, max: Int) = let {
             require(min < max)
             nextInt(max - min) + min
         }
