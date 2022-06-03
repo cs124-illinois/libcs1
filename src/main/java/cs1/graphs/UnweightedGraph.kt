@@ -356,7 +356,7 @@ class UnweightedGraph<T> private constructor(edges: Map<GraphNode<T>, Set<GraphN
             return randomUndirectedIntegerGraph(Random(), size, 128)
         }
 
-        private fun Random.nextInt(min: Int, max: Int) = let {
+        private fun Random.nextIntRange(min: Int, max: Int) = let {
             require(min < max)
             nextInt(max - min) + min
         }

@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "com.github.cs125-illinois"
-version = "2022.4.0"
+version = "2022.6.0"
 
 plugins {
     kotlin("jvm") version "1.6.21"
@@ -12,10 +12,9 @@ plugins {
 }
 repositories {
     mavenCentral()
-    maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
 }
 dependencies {
-    testImplementation("io.kotest:kotest-runner-junit5:5.2.3")
+    testImplementation("io.kotest:kotest-runner-junit5:5.3.0")
     testImplementation("org.slf4j:slf4j-simple:1.7.36")
 }
 tasks.dependencyUpdates {
@@ -38,7 +37,7 @@ detekt {
 }
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_16.toString()
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 }
 tasks.withType<Test> {
