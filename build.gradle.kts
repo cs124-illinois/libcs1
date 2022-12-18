@@ -7,8 +7,8 @@ plugins {
     kotlin("jvm") version "1.7.22"
     `maven-publish`
     id("org.jmailen.kotlinter") version "3.12.0"
-    id("com.github.ben-manes.versions") version "0.43.0"
-    id("io.gitlab.arturbosch.detekt") version "1.21.0"
+    id("com.github.ben-manes.versions") version "0.44.0"
+    id("io.gitlab.arturbosch.detekt") version "1.22.0"
 }
 repositories {
     mavenCentral()
