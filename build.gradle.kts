@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-group = "com.github.cs125-illinois"
-version = "2023.1.0"
+group = "com.github.cs124-illinois"
+version = "2023.1.1"
 
 plugins {
     kotlin("jvm") version "1.8.0"
