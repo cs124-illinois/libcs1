@@ -167,10 +167,10 @@ class UnweightedGraph<T> private constructor(edges: Map<GraphNode<T>, Set<GraphN
             return UnweightedGraph(
                 mapOf(
                     mapping[0]!! to setOf(mapping[1]!!),
-                    mapping[1]!! to setOf(mapping[0]!!)
+                    mapping[1]!! to setOf(mapping[0]!!),
                 ),
                 random,
-                true
+                true,
             )
         }
 
@@ -181,10 +181,10 @@ class UnweightedGraph<T> private constructor(edges: Map<GraphNode<T>, Set<GraphN
             return UnweightedGraph(
                 mapOf(
                     mapping[0]!! to setOf(mapping[1]!!),
-                    mapping[1]!! to setOf()
+                    mapping[1]!! to setOf(),
                 ),
                 random,
-                false
+                false,
             )
         }
 
@@ -218,7 +218,7 @@ class UnweightedGraph<T> private constructor(edges: Map<GraphNode<T>, Set<GraphN
         fun <T> crossUndirectedGraph(
             first: List<T>,
             second: List<T>,
-            random: Random = Random(124)
+            random: Random = Random(124),
         ): UnweightedGraph<T> {
             require(first.size >= 2 && second.size > 2) { "List has fewer than two elements" }
             val mapping = (first + second).mapIndexed { i, item -> i to Node(item, i) }.toMap()
