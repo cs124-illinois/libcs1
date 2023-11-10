@@ -39,7 +39,10 @@ class BinaryTree<T>(var value: T) {
     override fun toString() = "BinaryTree($size nodes)"
 
     companion object {
-        private fun <T> copy(from: BinaryTree<T>, to: BinaryTree<T>) {
+        private fun <T> copy(
+            from: BinaryTree<T>,
+            to: BinaryTree<T>,
+        ) {
             require(from.value == to.value)
             if (from.left != null) {
                 to.left = BinaryTree(from.left!!.value)
@@ -51,7 +54,11 @@ class BinaryTree<T>(var value: T) {
             }
         }
 
-        private fun <T> add(tree: BinaryTree<T>, value: T, random: Random) {
+        private fun <T> add(
+            tree: BinaryTree<T>,
+            value: T,
+            random: Random,
+        ) {
             if (random.nextBoolean()) {
                 if (tree.right == null) {
                     tree.right = BinaryTree(value)
@@ -75,7 +82,11 @@ class BinaryTree<T>(var value: T) {
             }
         }
 
-        private fun <T> balancedAdd(tree: BinaryTree<T>, value: T, random: Random) {
+        private fun <T> balancedAdd(
+            tree: BinaryTree<T>,
+            value: T,
+            random: Random,
+        ) {
             if (tree.right == null && tree.left == null) {
                 if (random.nextBoolean()) {
                     tree.right = BinaryTree(value)
@@ -105,7 +116,11 @@ class BinaryTree<T>(var value: T) {
         }
 
         @JvmStatic
-        fun randomIntegerTree(random: Random, size: Int, maxInteger: Int): BinaryTree<Int> {
+        fun randomIntegerTree(
+            random: Random,
+            size: Int,
+            maxInteger: Int,
+        ): BinaryTree<Int> {
             require(size > 0) { "size must be positive: $size" }
             return BinaryTree(random.nextInt(maxInteger) - (maxInteger / 2)).also { tree ->
                 repeat(size - 1) {
@@ -116,7 +131,10 @@ class BinaryTree<T>(var value: T) {
         }
 
         @JvmStatic
-        fun randomIntegerTree(size: Int, maxInteger: Int): BinaryTree<Int> {
+        fun randomIntegerTree(
+            size: Int,
+            maxInteger: Int,
+        ): BinaryTree<Int> {
             return randomIntegerTree(Random(), size, maxInteger)
         }
 
@@ -126,7 +144,11 @@ class BinaryTree<T>(var value: T) {
         }
 
         @JvmStatic
-        fun randomBalancedIntegerTree(random: Random, size: Int, maxInteger: Int): BinaryTree<Int> {
+        fun randomBalancedIntegerTree(
+            random: Random,
+            size: Int,
+            maxInteger: Int,
+        ): BinaryTree<Int> {
             require(size > 0) { "size must be positive: $size" }
             return BinaryTree(random.nextInt(maxInteger / 2) - maxInteger).also { tree ->
                 repeat(size - 1) {
@@ -137,22 +159,35 @@ class BinaryTree<T>(var value: T) {
         }
 
         @JvmStatic
-        fun randomBalancedIntegerTree(size: Int, maxInteger: Int): BinaryTree<Int> {
+        fun randomBalancedIntegerTree(
+            size: Int,
+            maxInteger: Int,
+        ): BinaryTree<Int> {
             return randomBalancedIntegerTree(Random().apply { setSeed(124) }, size, maxInteger)
         }
 
-        private fun Random.nextIntRange(min: Int, max: Int) = let {
+        private fun Random.nextIntRange(
+            min: Int,
+            max: Int,
+        ) = let {
             require(min < max)
             nextInt(max - min) + min
         }
 
         @Suppress("SpellCheckingInspection")
         private const val CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz "
-        private fun randomAlphanumericString(random: Random, maxLength: Int) =
-            String(CharArray(random.nextInt(1, maxLength)) { CHARACTERS[random.nextInt(CHARACTERS.length)] })
+
+        private fun randomAlphanumericString(
+            random: Random,
+            maxLength: Int,
+        ) = String(CharArray(random.nextInt(1, maxLength)) { CHARACTERS[random.nextInt(CHARACTERS.length)] })
 
         @JvmStatic
-        fun randomStringTree(random: Random, size: Int, maxLength: Int): BinaryTree<String> {
+        fun randomStringTree(
+            random: Random,
+            size: Int,
+            maxLength: Int,
+        ): BinaryTree<String> {
             require(size > 0) { "size must be positive: $size" }
             return BinaryTree(randomAlphanumericString(random, maxLength)).also { tree ->
                 repeat(size - 1) {
@@ -163,12 +198,19 @@ class BinaryTree<T>(var value: T) {
         }
 
         @JvmStatic
-        fun randomStringTree(size: Int, maxLength: Int): BinaryTree<String> {
+        fun randomStringTree(
+            size: Int,
+            maxLength: Int,
+        ): BinaryTree<String> {
             return randomStringTree(Random().apply { setSeed(124) }, size, maxLength)
         }
 
         @JvmStatic
-        fun randomBalancedStringTree(random: Random, size: Int, maxLength: Int): BinaryTree<String> {
+        fun randomBalancedStringTree(
+            random: Random,
+            size: Int,
+            maxLength: Int,
+        ): BinaryTree<String> {
             require(size > 0) { "size must be positive: $size" }
             return BinaryTree(randomAlphanumericString(random, maxLength)).also { tree ->
                 repeat(size - 1) {
@@ -179,7 +221,10 @@ class BinaryTree<T>(var value: T) {
         }
 
         @JvmStatic
-        fun randomBalancedStringTree(size: Int, maxInteger: Int): BinaryTree<String> {
+        fun randomBalancedStringTree(
+            size: Int,
+            maxInteger: Int,
+        ): BinaryTree<String> {
             return randomBalancedStringTree(Random().apply { setSeed(124) }, size, maxInteger)
         }
     }

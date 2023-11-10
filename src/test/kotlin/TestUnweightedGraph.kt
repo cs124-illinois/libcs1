@@ -35,8 +35,18 @@ class TestUnweightedGraph : StringSpec({
             Example.sum(graph) shouldBe 24
             Example.hasCycle(graph) shouldBe false
             graph.edges.keys.forEach { node ->
-                Example.size(node) shouldBe if (node.value == 8) { 2 } else { 1 }
-                Example.sum(node) shouldBe if (node.value == 8) { 24 } else { 16 }
+                Example.size(node) shouldBe
+                    if (node.value == 8) {
+                        2
+                    } else {
+                        1
+                    }
+                Example.sum(node) shouldBe
+                    if (node.value == 8) {
+                        24
+                    } else {
+                        16
+                    }
             }
         }
     }
