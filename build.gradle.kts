@@ -41,6 +41,9 @@ tasks.withType<Test> {
     jvmArgs("-ea", "-Xmx1G", "-Xss256k", "-Dfile.encoding=UTF-8")
 }
 java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
     withJavadocJar()
     withSourcesJar()
 }
