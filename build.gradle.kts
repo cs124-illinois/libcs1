@@ -1,15 +1,15 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "org.cs124"
-version = "2023.12.0"
+version = "2024.3.0"
 
 plugins {
     kotlin("jvm") version "1.9.22"
     `maven-publish`
     signing
-    id("org.jmailen.kotlinter") version "4.1.1"
-    id("com.github.ben-manes.versions") version "0.50.0"
-    id("io.gitlab.arturbosch.detekt") version "1.23.4"
+    id("org.jmailen.kotlinter") version "4.2.0"
+    id("com.github.ben-manes.versions") version "0.51.0"
+    id("io.gitlab.arturbosch.detekt") version "1.23.5"
     id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
 }
 repositories {
@@ -17,7 +17,7 @@ repositories {
 }
 dependencies {
     testImplementation("io.kotest:kotest-runner-junit5:5.8.0")
-    testImplementation("org.slf4j:slf4j-simple:2.0.10")
+    testImplementation("org.slf4j:slf4j-simple:2.0.12")
 }
 tasks.dependencyUpdates {
     fun String.isNonStable() = !(
