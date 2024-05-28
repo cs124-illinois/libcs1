@@ -1,10 +1,11 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "org.cs124"
-version = "2024.4.0"
+version = "2024.5.0"
 
 plugins {
-    kotlin("jvm") version "1.9.23"
+    kotlin("jvm") version "2.0.0"
     `maven-publish`
     signing
     id("org.jmailen.kotlinter") version "4.3.0"
@@ -16,8 +17,8 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    testImplementation("io.kotest:kotest-runner-junit5:5.8.1")
-    testImplementation("org.slf4j:slf4j-simple:2.0.12")
+    testImplementation("io.kotest:kotest-runner-junit5:5.9.0")
+    testImplementation("org.slf4j:slf4j-simple:2.0.13")
 }
 tasks.dependencyUpdates {
     fun String.isNonStable() = !(
@@ -31,8 +32,8 @@ detekt {
     buildUponDefaultConfig = true
 }
 tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_21)
     }
 }
 tasks.withType<Test> {
@@ -42,7 +43,7 @@ tasks.withType<Test> {
 }
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
     withJavadocJar()
     withSourcesJar()
