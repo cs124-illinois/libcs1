@@ -38,3 +38,6 @@ test-output/
 .idea/**/libraries
 .idea/**/modules
 .idea/**/compiler.xml
+
+# Kotlin 2.0 directory
+.kotlin
