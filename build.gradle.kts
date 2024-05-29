@@ -33,7 +33,7 @@ detekt {
 }
 tasks.withType<KotlinCompile> {
     compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_21)
+        jvmTarget.set(JvmTarget.JVM_17)
     }
 }
 tasks.withType<Test> {
@@ -43,7 +43,7 @@ tasks.withType<Test> {
 }
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
     withJavadocJar()
     withSourcesJar()
