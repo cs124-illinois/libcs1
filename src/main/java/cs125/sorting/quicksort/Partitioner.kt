@@ -29,8 +29,6 @@ class Partitioner {
         }
 
         @JvmStatic
-        fun <T : Comparable<T>?> partition(values: Array<T>): Int {
-            return partition(values, 0, values.size)
-        }
+        fun <T : Comparable<T>?> partition(values: Array<T>): Int = partition(values, 0, values.size)
     }
 }

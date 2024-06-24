@@ -3,7 +3,10 @@ package cs1.graphs
 import java.util.Objects
 import java.util.Random
 
-class Node<T>(var value: T, val nonce: Int) {
+class Node<T>(
+    var value: T,
+    val nonce: Int,
+) {
     override fun equals(other: Any?) =
         when (other) {
             !is Node<*> -> false
@@ -12,28 +15,28 @@ class Node<T>(var value: T, val nonce: Int) {
 
     override fun hashCode() = Objects.hash(value, nonce)
 
-    override fun toString(): String {
-        return "Node(value=$value)"
-    }
+    override fun toString(): String = "Node(value=$value)"
 }
 
 class GraphNode<T>
-    @JvmOverloads
-    constructor(val value: T, val nonce: Int, var neighbors: Set<GraphNode<T>> = setOf()) {
-        constructor(node: GraphNode<T>) : this(node.value, node.nonce)
+@JvmOverloads
+constructor(
+    val value: T,
+    val nonce: Int,
+    var neighbors: Set<GraphNode<T>> = setOf(),
+) {
+    constructor(node: GraphNode<T>) : this(node.value, node.nonce)
 
-        override fun equals(other: Any?) =
-            when (other) {
-                !is GraphNode<*> -> false
-                else -> value == other.value && nonce == other.nonce
-            }
-
-        override fun hashCode() = Objects.hash(value, nonce)
-
-        override fun toString(): String {
-            return "GraphNode(value=$value)"
+    override fun equals(other: Any?) =
+        when (other) {
+            !is GraphNode<*> -> false
+            else -> value == other.value && nonce == other.nonce
         }
-    }
+
+    override fun hashCode() = Objects.hash(value, nonce)
+
+    override fun toString(): String = "GraphNode(value=$value)"
+}
 
 private fun <T> GraphNode<T>.find(): Set<GraphNode<T>> =
     mutableSetOf<GraphNode<T>>().also { nodes ->
@@ -57,10 +60,11 @@ fun <T> Map<Node<T>, Set<Node<T>>>.toGraphNodes(
     map { (key, values) ->
         check(mapping[key] != null) { "Missing mapping for node in graph creation" }
         mapping[key]!! to
-            values.map { value ->
-                check(mapping[value] != null) { "Missing mapping for node in graph creation" }
-                mapping[value]!!
-            }.toSet()
+            values
+                .map { value ->
+                    check(mapping[value] != null) { "Missing mapping for node in graph creation" }
+                    mapping[value]!!
+                }.toSet()
     }.toMap().apply {
         forEach { (node, neighbors) ->
             node.neighbors = neighbors
@@ -86,10 +90,11 @@ private fun <T> Map<GraphNode<T>, Set<GraphNode<T>>>.copyGraphNodes() =
         map { (key, values) ->
             check(mapping[key] != null) { "Missing mapping for node in graph copy" }
             mapping[key]!! to
-                values.map { value ->
-                    check(mapping[value] != null) { "Missing mapping for node in graph creation" }
-                    mapping[value]!!
-                }.toSet()
+                values
+                    .map { value ->
+                        check(mapping[value] != null) { "Missing mapping for node in graph creation" }
+                        mapping[value]!!
+                    }.toSet()
         }.toMap().onEach { (node, neighbors) ->
             node.neighbors = neighbors
         }
@@ -100,15 +105,18 @@ fun Map<GraphNode<*>, Set<GraphNode<*>>>.toNodes() =
         map { (key, values) ->
             check(mapping[key] != null) { "Missing mapping for node in graph creation" }
             mapping[key]!! to
-                values.map { value ->
-                    check(mapping[value] != null) { "Missing mapping for node in graph creation" }
-                    mapping[value]!!
-                }.toSet()
+                values
+                    .map { value ->
+                        check(mapping[value] != null) { "Missing mapping for node in graph creation" }
+                        mapping[value]!!
+                    }.toSet()
         }.toMap()
     }
 
 @Suppress("unused")
-class UnweightedGraph<T> private constructor(edges: Map<GraphNode<T>, Set<GraphNode<T>>>) {
+class UnweightedGraph<T> private constructor(
+    edges: Map<GraphNode<T>, Set<GraphNode<T>>>,
+) {
     constructor(edges: Map<Node<T>, Set<Node<T>>>, random: Random = Random(), isUndirected: Boolean) :
         this(edges.toGraphNodes(random, isUndirected))
 
@@ -404,14 +412,11 @@ class UnweightedGraph<T> private constructor(edges: Map<GraphNode<T>, Set<GraphN
         fun randomUndirectedIntegerGraph(
             size: Int,
             maxInteger: Int,
-        ): UnweightedGraph<Int> {
-            return randomUndirectedIntegerGraph(Random(), size, maxInteger)
-        }
+        ): UnweightedGraph<Int> = randomUndirectedIntegerGraph(Random(), size, maxInteger)
 
         @JvmStatic
-        fun randomUndirectedIntegerGraph(size: Int): UnweightedGraph<Int> {
-            return randomUndirectedIntegerGraph(Random(), size, 128)
-        }
+        fun randomUndirectedIntegerGraph(size: Int): UnweightedGraph<Int> =
+            randomUndirectedIntegerGraph(Random(), size, 128)
 
         private fun Random.nextIntRange(
             min: Int,
@@ -443,13 +448,10 @@ class UnweightedGraph<T> private constructor(edges: Map<GraphNode<T>, Set<GraphN
         fun randomUndirectedStringGraph(
             size: Int,
             maxLength: Int,
-        ): UnweightedGraph<String> {
-            return randomUndirectedStringGraph(Random(), size, maxLength)
-        }
+        ): UnweightedGraph<String> = randomUndirectedStringGraph(Random(), size, maxLength)
 
         @JvmStatic
-        fun randomUndirectedStringGraph(size: Int): UnweightedGraph<String> {
-            return randomUndirectedStringGraph(Random(), size, 32)
-        }
+        fun randomUndirectedStringGraph(size: Int): UnweightedGraph<String> =
+            randomUndirectedStringGraph(Random(), size, 32)
     }
 }

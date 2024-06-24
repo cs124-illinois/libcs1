@@ -4,7 +4,9 @@ import java.util.Objects
 import java.util.Random
 
 @Suppress("unused")
-class BinaryTree<T>(var value: T) {
+class BinaryTree<T>(
+    var value: T,
+) {
     var left: BinaryTree<T>? = null
     var right: BinaryTree<T>? = null
     private var size: Int = 1
@@ -75,12 +77,11 @@ class BinaryTree<T>(var value: T) {
             tree.size++
         }
 
-        private fun <T> depth(tree: BinaryTree<T>?): Int {
-            return when (tree) {
+        private fun <T> depth(tree: BinaryTree<T>?): Int =
+            when (tree) {
                 null -> 0
                 else -> 1 + depth(tree.right).coerceAtLeast(depth(tree.left))
             }
-        }
 
         private fun <T> balancedAdd(
             tree: BinaryTree<T>,
@@ -134,14 +135,10 @@ class BinaryTree<T>(var value: T) {
         fun randomIntegerTree(
             size: Int,
             maxInteger: Int,
-        ): BinaryTree<Int> {
-            return randomIntegerTree(Random(), size, maxInteger)
-        }
+        ): BinaryTree<Int> = randomIntegerTree(Random(), size, maxInteger)
 
         @JvmStatic
-        fun randomIntegerTree(size: Int): BinaryTree<Int> {
-            return randomIntegerTree(Random(), size, 128)
-        }
+        fun randomIntegerTree(size: Int): BinaryTree<Int> = randomIntegerTree(Random(), size, 128)
 
         @JvmStatic
         fun randomBalancedIntegerTree(
@@ -162,9 +159,7 @@ class BinaryTree<T>(var value: T) {
         fun randomBalancedIntegerTree(
             size: Int,
             maxInteger: Int,
-        ): BinaryTree<Int> {
-            return randomBalancedIntegerTree(Random().apply { setSeed(124) }, size, maxInteger)
-        }
+        ): BinaryTree<Int> = randomBalancedIntegerTree(Random().apply { setSeed(124) }, size, maxInteger)
 
         private fun Random.nextIntRange(
             min: Int,
@@ -201,9 +196,7 @@ class BinaryTree<T>(var value: T) {
         fun randomStringTree(
             size: Int,
             maxLength: Int,
-        ): BinaryTree<String> {
-            return randomStringTree(Random().apply { setSeed(124) }, size, maxLength)
-        }
+        ): BinaryTree<String> = randomStringTree(Random().apply { setSeed(124) }, size, maxLength)
 
         @JvmStatic
         fun randomBalancedStringTree(
@@ -224,8 +217,6 @@ class BinaryTree<T>(var value: T) {
         fun randomBalancedStringTree(
             size: Int,
             maxInteger: Int,
-        ): BinaryTree<String> {
-            return randomBalancedStringTree(Random().apply { setSeed(124) }, size, maxInteger)
-        }
+        ): BinaryTree<String> = randomBalancedStringTree(Random().apply { setSeed(124) }, size, maxInteger)
     }
 }
