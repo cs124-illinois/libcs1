@@ -8,7 +8,7 @@ plugins {
     kotlin("jvm") version "2.0.0"
     `maven-publish`
     signing
-    id("org.jmailen.kotlinter") version "4.4.0"
+    id("org.jmailen.kotlinter") version "4.4.1"
     id("com.github.ben-manes.versions") version "0.51.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.6"
     id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
