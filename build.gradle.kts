@@ -2,13 +2,13 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "org.cs124"
-version = "2024.11.0"
+version = "2025.1.0"
 
 plugins {
-    kotlin("jvm") version "2.0.21"
+    kotlin("jvm") version "2.1.0"
     `maven-publish`
     signing
-    id("org.jmailen.kotlinter") version "4.4.1"
+    id("org.jmailen.kotlinter") version "5.0.1"
     id("com.github.ben-manes.versions") version "0.51.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.7"
     id("io.github.gradle-nexus.publish-plugin") version "2.0.0"

@@ -6,11 +6,7 @@ package cs125.sorting.quicksort
 class Partitioner {
     companion object {
         @JvmStatic
-        fun <T : Comparable<T>?> partition(
-            values: Array<T>?,
-            start: Int,
-            end: Int,
-        ): Int {
+        fun <T : Comparable<T>?> partition(values: Array<T>?, start: Int, end: Int): Int {
             require(values != null && values.isNotEmpty())
             var tmp: T
             var pivotPosition = start

@@ -3,15 +3,11 @@ package cs1.graphs
 import java.util.Objects
 import java.util.Random
 
-class Node<T>(
-    var value: T,
-    val nonce: Int,
-) {
-    override fun equals(other: Any?) =
-        when (other) {
-            !is Node<*> -> false
-            else -> value == other.value && nonce == other.nonce
-        }
+class Node<T>(var value: T, val nonce: Int) {
+    override fun equals(other: Any?) = when (other) {
+        !is Node<*> -> false
+        else -> value == other.value && nonce == other.nonce
+    }
 
     override fun hashCode() = Objects.hash(value, nonce)
 
@@ -27,21 +23,19 @@ constructor(
 ) {
     constructor(node: GraphNode<T>) : this(node.value, node.nonce)
 
-    override fun equals(other: Any?) =
-        when (other) {
-            !is GraphNode<*> -> false
-            else -> value == other.value && nonce == other.nonce
-        }
+    override fun equals(other: Any?) = when (other) {
+        !is GraphNode<*> -> false
+        else -> value == other.value && nonce == other.nonce
+    }
 
     override fun hashCode() = Objects.hash(value, nonce)
 
     override fun toString(): String = "GraphNode(value=$value)"
 }
 
-private fun <T> GraphNode<T>.find(): Set<GraphNode<T>> =
-    mutableSetOf<GraphNode<T>>().also { nodes ->
-        find(nodes)
-    }
+private fun <T> GraphNode<T>.find(): Set<GraphNode<T>> = mutableSetOf<GraphNode<T>>().also { nodes ->
+    find(nodes)
+}
 
 private fun <T> GraphNode<T>.find(visited: MutableSet<GraphNode<T>>) {
     visited += this
@@ -53,40 +47,38 @@ private fun <T> GraphNode<T>.find(visited: MutableSet<GraphNode<T>>) {
 }
 
 @Suppress("NestedBlockDepth")
-fun <T> Map<Node<T>, Set<Node<T>>>.toGraphNodes(
-    random: Random,
-    checkUndirected: Boolean,
-) = keys.associateWith { GraphNode(it.value, random.nextInt()) }.let { mapping ->
-    map { (key, values) ->
-        check(mapping[key] != null) { "Missing mapping for node in graph creation" }
-        mapping[key]!! to
-            values
-                .map { value ->
-                    check(mapping[value] != null) { "Missing mapping for node in graph creation" }
-                    mapping[value]!!
-                }.toSet()
-    }.toMap().apply {
-        forEach { (node, neighbors) ->
-            node.neighbors = neighbors
-        }
-        if (checkUndirected) {
-            check(keys.first().find() == mapping.values.toSet()) { "Graph is not connected" }
-        } else {
-            check(keys.find { it.find() == mapping.values.toSet() } != null) { "Graph is not connected" }
-        }
-        keys.forEach { node ->
-            check(node !in node.neighbors) { "Graph contains a self-edge" }
+fun <T> Map<Node<T>, Set<Node<T>>>.toGraphNodes(random: Random, checkUndirected: Boolean) =
+    keys.associateWith { GraphNode(it.value, random.nextInt()) }.let { mapping ->
+        map { (key, values) ->
+            check(mapping[key] != null) { "Missing mapping for node in graph creation" }
+            mapping[key]!! to
+                values
+                    .map { value ->
+                        check(mapping[value] != null) { "Missing mapping for node in graph creation" }
+                        mapping[value]!!
+                    }.toSet()
+        }.toMap().apply {
+            forEach { (node, neighbors) ->
+                node.neighbors = neighbors
+            }
             if (checkUndirected) {
-                for (neighbor in node.neighbors) {
-                    check(node in neighbor.neighbors) { "Graph is not undirected" }
+                check(keys.first().find() == mapping.values.toSet()) { "Graph is not connected" }
+            } else {
+                check(keys.find { it.find() == mapping.values.toSet() } != null) { "Graph is not connected" }
+            }
+            keys.forEach { node ->
+                check(node !in node.neighbors) { "Graph contains a self-edge" }
+                if (checkUndirected) {
+                    for (neighbor in node.neighbors) {
+                        check(node in neighbor.neighbors) { "Graph is not undirected" }
+                    }
                 }
             }
         }
     }
-}
 
-private fun <T> Map<GraphNode<T>, Set<GraphNode<T>>>.copyGraphNodes() =
-    keys.associateWith { GraphNode(it) }.let { mapping ->
+private fun <T> Map<GraphNode<T>, Set<GraphNode<T>>>.copyGraphNodes() = keys.associateWith { GraphNode(it) }
+    .let { mapping ->
         map { (key, values) ->
             check(mapping[key] != null) { "Missing mapping for node in graph copy" }
             mapping[key]!! to
@@ -100,23 +92,20 @@ private fun <T> Map<GraphNode<T>, Set<GraphNode<T>>>.copyGraphNodes() =
         }
     }
 
-fun Map<GraphNode<*>, Set<GraphNode<*>>>.toNodes() =
-    keys.associateWith { Node(it.value, 0) }.let { mapping ->
-        map { (key, values) ->
-            check(mapping[key] != null) { "Missing mapping for node in graph creation" }
-            mapping[key]!! to
-                values
-                    .map { value ->
-                        check(mapping[value] != null) { "Missing mapping for node in graph creation" }
-                        mapping[value]!!
-                    }.toSet()
-        }.toMap()
-    }
+fun Map<GraphNode<*>, Set<GraphNode<*>>>.toNodes() = keys.associateWith { Node(it.value, 0) }.let { mapping ->
+    map { (key, values) ->
+        check(mapping[key] != null) { "Missing mapping for node in graph creation" }
+        mapping[key]!! to
+            values
+                .map { value ->
+                    check(mapping[value] != null) { "Missing mapping for node in graph creation" }
+                    mapping[value]!!
+                }.toSet()
+    }.toMap()
+}
 
 @Suppress("unused")
-class UnweightedGraph<T> private constructor(
-    edges: Map<GraphNode<T>, Set<GraphNode<T>>>,
-) {
+class UnweightedGraph<T> private constructor(edges: Map<GraphNode<T>, Set<GraphNode<T>>>) {
     constructor(edges: Map<Node<T>, Set<Node<T>>>, random: Random = Random(), isUndirected: Boolean) :
         this(edges.toGraphNodes(random, isUndirected))
 
@@ -139,13 +128,12 @@ class UnweightedGraph<T> private constructor(
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun equals(other: Any?) =
-        when (other) {
-            !is UnweightedGraph<*> -> false
-            else ->
-                (_edges as Map<GraphNode<*>, Set<GraphNode<*>>>).toNodes() ==
-                    (other._edges as Map<GraphNode<*>, Set<GraphNode<*>>>).toNodes()
-        }
+    override fun equals(other: Any?) = when (other) {
+        !is UnweightedGraph<*> -> false
+        else ->
+            (_edges as Map<GraphNode<*>, Set<GraphNode<*>>>).toNodes() ==
+                (other._edges as Map<GraphNode<*>, Set<GraphNode<*>>>).toNodes()
+    }
 
     override fun hashCode() = Objects.hash(_edges)
 
@@ -181,18 +169,12 @@ class UnweightedGraph<T> private constructor(
     companion object {
         @JvmOverloads
         @JvmStatic
-        fun <T> singleNodeGraph(
-            value: T,
-            random: Random = Random(124),
-        ) = UnweightedGraph(mapOf(Node(value, 0) to setOf()), random, true)
+        fun <T> singleNodeGraph(value: T, random: Random = Random(124)) =
+            UnweightedGraph(mapOf(Node(value, 0) to setOf()), random, true)
 
         @JvmOverloads
         @JvmStatic
-        fun <T> twoNodeUndirectedGraph(
-            first: T,
-            second: T,
-            random: Random = Random(124),
-        ): UnweightedGraph<T> {
+        fun <T> twoNodeUndirectedGraph(first: T, second: T, random: Random = Random(124)): UnweightedGraph<T> {
             val mapping = mapOf(0 to Node(first, 0), 1 to Node(second, 1))
             return UnweightedGraph(
                 mapOf(
@@ -206,11 +188,7 @@ class UnweightedGraph<T> private constructor(
 
         @JvmOverloads
         @JvmStatic
-        fun <T> twoNodeDirectedGraph(
-            first: T,
-            second: T,
-            random: Random = Random(124),
-        ): UnweightedGraph<T> {
+        fun <T> twoNodeDirectedGraph(first: T, second: T, random: Random = Random(124)): UnweightedGraph<T> {
             val mapping = mapOf(0 to Node(first, 0), 1 to Node(second, 1))
             return UnweightedGraph(
                 mapOf(
@@ -224,10 +202,7 @@ class UnweightedGraph<T> private constructor(
 
         @JvmOverloads
         @JvmStatic
-        fun <T> linearUndirectedGraph(
-            list: List<T>,
-            random: Random = Random(124),
-        ): UnweightedGraph<T> {
+        fun <T> linearUndirectedGraph(list: List<T>, random: Random = Random(124)): UnweightedGraph<T> {
             require(list.size >= 2) { "List has fewer than two elements" }
             val mapping = list.mapIndexed { i, item -> i to Node(item, i) }.toMap()
             val edges = mapping.values.associateWith { mutableSetOf<Node<T>>() }
@@ -240,10 +215,7 @@ class UnweightedGraph<T> private constructor(
 
         @JvmOverloads
         @JvmStatic
-        fun <T> linearDirectedGraph(
-            list: List<T>,
-            random: Random = Random(124),
-        ): UnweightedGraph<T> {
+        fun <T> linearDirectedGraph(list: List<T>, random: Random = Random(124)): UnweightedGraph<T> {
             require(list.size >= 2) { "List has fewer than two elements" }
             val mapping = list.mapIndexed { i, item -> i to Node(item, i) }.toMap()
             val edges = mapping.values.associateWith { mutableSetOf<Node<T>>() }
@@ -291,10 +263,7 @@ class UnweightedGraph<T> private constructor(
 
         @JvmOverloads
         @JvmStatic
-        fun <T> randomTreeUndirectedGraph(
-            list: List<T>,
-            random: Random = Random(),
-        ): UnweightedGraph<T> {
+        fun <T> randomTreeUndirectedGraph(list: List<T>, random: Random = Random()): UnweightedGraph<T> {
             require(list.size >= 2) { "List has fewer than two elements" }
             val mapping = list.mapIndexed { i, item -> i to Node(item, i) }.toMap()
             val edges = mapping.values.associateWith { mutableSetOf<Node<T>>() }
@@ -313,10 +282,7 @@ class UnweightedGraph<T> private constructor(
 
         @JvmOverloads
         @JvmStatic
-        fun <T> circleUndirectedGraph(
-            list: List<T>,
-            random: Random = Random(124),
-        ): UnweightedGraph<T> {
+        fun <T> circleUndirectedGraph(list: List<T>, random: Random = Random(124)): UnweightedGraph<T> {
             require(list.size >= 2) { "List has fewer than two elements" }
             val mapping = list.mapIndexed { i, item -> i to Node(item, i) }.toMap()
             val edges = mapping.values.associateWith { mutableSetOf<Node<T>>() }
@@ -331,10 +297,7 @@ class UnweightedGraph<T> private constructor(
 
         @JvmOverloads
         @JvmStatic
-        fun <T> circleDirectedGraph(
-            list: List<T>,
-            random: Random = Random(124),
-        ): UnweightedGraph<T> {
+        fun <T> circleDirectedGraph(list: List<T>, random: Random = Random(124)): UnweightedGraph<T> {
             require(list.size >= 2) { "List has fewer than two elements" }
             val mapping = list.mapIndexed { i, item -> i to Node(item, i) }.toMap()
             val edges = mapping.values.associateWith { mutableSetOf<Node<T>>() }
@@ -347,10 +310,7 @@ class UnweightedGraph<T> private constructor(
 
         @JvmOverloads
         @JvmStatic
-        fun <T> fullyConnectedGraph(
-            list: List<T>,
-            random: Random = Random(124),
-        ): UnweightedGraph<T> {
+        fun <T> fullyConnectedGraph(list: List<T>, random: Random = Random(124)): UnweightedGraph<T> {
             require(list.size >= 2) { "List has fewer than two elements" }
             val mapping = list.mapIndexed { i, item -> i to Node(item, i) }.toMap()
             val edges = mapping.values.associateWith { mutableSetOf<Node<T>>() }
@@ -365,10 +325,7 @@ class UnweightedGraph<T> private constructor(
 
         @JvmOverloads
         @JvmStatic
-        fun <T> randomUndirectedGraph(
-            list: List<T>,
-            random: Random = Random(),
-        ): UnweightedGraph<T> {
+        fun <T> randomUndirectedGraph(list: List<T>, random: Random = Random()): UnweightedGraph<T> {
             require(list.size >= 2) { "List has fewer than two elements" }
             val mapping = list.mapIndexed { i, item -> i to Node(item, i) }.toMap()
             val edges = mapping.values.associateWith { mutableSetOf<Node<T>>() }
@@ -383,10 +340,7 @@ class UnweightedGraph<T> private constructor(
 
         @JvmOverloads
         @JvmStatic
-        fun <T> randomDirectedGraph(
-            list: List<T>,
-            random: Random = Random(),
-        ): UnweightedGraph<T> {
+        fun <T> randomDirectedGraph(list: List<T>, random: Random = Random()): UnweightedGraph<T> {
             require(list.size >= 2) { "List has fewer than two elements" }
             val mapping = list.mapIndexed { i, item -> i to Node(item, i) }.toMap()
             val edges = mapping.values.associateWith { mutableSetOf<Node<T>>() }
@@ -399,29 +353,20 @@ class UnweightedGraph<T> private constructor(
         }
 
         @JvmStatic
-        fun randomUndirectedIntegerGraph(
-            random: Random,
-            size: Int,
-            maxInteger: Int,
-        ): UnweightedGraph<Int> {
+        fun randomUndirectedIntegerGraph(random: Random, size: Int, maxInteger: Int): UnweightedGraph<Int> {
             require(size > 0) { "size must be positive: $size" }
             return randomUndirectedGraph(List(size) { random.nextInt(maxInteger) - (maxInteger / 2) }, random)
         }
 
         @JvmStatic
-        fun randomUndirectedIntegerGraph(
-            size: Int,
-            maxInteger: Int,
-        ): UnweightedGraph<Int> = randomUndirectedIntegerGraph(Random(), size, maxInteger)
+        fun randomUndirectedIntegerGraph(size: Int, maxInteger: Int): UnweightedGraph<Int> =
+            randomUndirectedIntegerGraph(Random(), size, maxInteger)
 
         @JvmStatic
         fun randomUndirectedIntegerGraph(size: Int): UnweightedGraph<Int> =
             randomUndirectedIntegerGraph(Random(), size, 128)
 
-        private fun Random.nextIntRange(
-            min: Int,
-            max: Int,
-        ) = let {
+        private fun Random.nextIntRange(min: Int, max: Int) = let {
             require(min < max)
             nextInt(max - min) + min
         }
@@ -429,26 +374,18 @@ class UnweightedGraph<T> private constructor(
         @Suppress("SpellCheckingInspection")
         private const val CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz "
 
-        private fun randomAlphanumericString(
-            random: Random,
-            maxLength: Int,
-        ) = String(CharArray(random.nextInt(1, maxLength)) { CHARACTERS[random.nextInt(CHARACTERS.length)] })
+        private fun randomAlphanumericString(random: Random, maxLength: Int) =
+            String(CharArray(random.nextInt(1, maxLength)) { CHARACTERS[random.nextInt(CHARACTERS.length)] })
 
         @JvmStatic
-        fun randomUndirectedStringGraph(
-            random: Random,
-            size: Int,
-            maxLength: Int,
-        ): UnweightedGraph<String> {
+        fun randomUndirectedStringGraph(random: Random, size: Int, maxLength: Int): UnweightedGraph<String> {
             require(size > 0) { "size must be positive: $size" }
             return randomUndirectedGraph(List(size) { randomAlphanumericString(random, maxLength) }, random)
         }
 
         @JvmStatic
-        fun randomUndirectedStringGraph(
-            size: Int,
-            maxLength: Int,
-        ): UnweightedGraph<String> = randomUndirectedStringGraph(Random(), size, maxLength)
+        fun randomUndirectedStringGraph(size: Int, maxLength: Int): UnweightedGraph<String> =
+            randomUndirectedStringGraph(Random(), size, maxLength)
 
         @JvmStatic
         fun randomUndirectedStringGraph(size: Int): UnweightedGraph<String> =
