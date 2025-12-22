@@ -27,6 +27,7 @@ class BinaryTree<T>(var value: T) {
     override fun equals(other: Any?): Boolean {
         return when {
             other?.javaClass != javaClass -> false
+
             else -> {
                 other as BinaryTree<*>
                 return other.value == value && Objects.equals(other.left, left) && Objects.equals(other.right, right)

@@ -130,6 +130,7 @@ class UnweightedGraph<T> private constructor(edges: Map<GraphNode<T>, Set<GraphN
     @Suppress("UNCHECKED_CAST")
     override fun equals(other: Any?) = when (other) {
         !is UnweightedGraph<*> -> false
+
         else ->
             (_edges as Map<GraphNode<*>, Set<GraphNode<*>>>).toNodes() ==
                 (other._edges as Map<GraphNode<*>, Set<GraphNode<*>>>).toNodes()
