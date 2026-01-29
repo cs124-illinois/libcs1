@@ -2,13 +2,13 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "org.cs124"
-version = "2026.1.0"
+version = "2026.1.1"
 
 plugins {
     kotlin("jvm") version "2.3.0"
     `maven-publish`
     signing
-    id("org.jmailen.kotlinter") version "5.3.0"
+    id("org.jmailen.kotlinter") version "5.4.0"
     id("com.github.ben-manes.versions") version "0.53.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
@@ -18,7 +18,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    testImplementation("io.kotest:kotest-runner-junit5:6.0.7")
+    testImplementation("io.kotest:kotest-runner-junit5:6.1.2")
     testImplementation("org.slf4j:slf4j-simple:2.0.17")
 }
 tasks.dependencyUpdates {
