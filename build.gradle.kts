@@ -2,10 +2,10 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "org.cs124"
-version = "2026.2.0"
+version = "2026.4.0"
 
 plugins {
-    kotlin("jvm") version "2.3.10"
+    kotlin("jvm") version "2.3.20"
     `maven-publish`
     signing
     id("org.jmailen.kotlinter") version "5.4.2"
@@ -18,7 +18,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    testImplementation("io.kotest:kotest-runner-junit5:6.1.3")
+    testImplementation("io.kotest:kotest-runner-junit5:6.1.10")
     testImplementation("org.slf4j:slf4j-simple:2.0.17")
 }
 tasks.dependencyUpdates {
